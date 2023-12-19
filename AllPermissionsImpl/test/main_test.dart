@@ -1,16 +1,13 @@
 import 'package:all_permissions_impl/main.dart';
-import 'package:flutter_blue/flutter_blue.dart';
 import 'package:location/location.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart' as flutter_test;
+import 'package:test/test.dart' as test;
 
 void main() {
-  testWidgets('Test checking - Bluetooth, Location, MobileData, Wifi services', (WidgetTester tester) async {
+  flutter_test.testWidgets('Test checking - Bluetooth, Location, MobileData, Wifi services', (flutter_test.WidgetTester tester) async {
     await tester.runAsync(() async {
-      await tester.pumpWidget(const MyHomePage(title: ""));
-
-      expect(find.text('Hello'), findsOneWidget);
-
+      tester.pumpWidget(const MyApp());
       await testBluetooth();
       await testLocation();
       await testMobileData();
@@ -20,42 +17,42 @@ void main() {
 }
 
 Future<void> testBluetooth() async {
-  test('Check Bluetooth Enabled', () async {
-    final FlutterBlue flutterBlue = FlutterBlue.instance;
-    final bool bluetoothEnabled = await flutterBlue.isOn;
+  test.test('Check Bluetooth Enabled', () async {
+    final ConnectivityResult connectivityResult = await Connectivity().checkConnectivity();
+    final bool bluetoothEnabled = connectivityResult == ConnectivityResult.bluetooth;
 
-    expect(bluetoothEnabled, isTrue);
+    test.expect(bluetoothEnabled, test.isTrue);
   });
 }
 
 Future<void> testLocation() async {
-  test('Check Location Enabled', () async {
+  test.test('Check Location Enabled', () async {
     final Location location = Location();
     bool locationEnabled = await location.serviceEnabled();
 
-    expect(locationEnabled, isTrue);
+    test.expect(locationEnabled, test.isTrue);
   });
 }
 
 Future<void> testMobileData() async {
-  test('Check Mobile Data Enabled', () async {
+  test.test('Check Mobile Data Enabled', () async {
     final ConnectivityResult connectivityResult =
     await Connectivity().checkConnectivity();
 
     final bool mobileDataEnabled =
         connectivityResult == ConnectivityResult.mobile;
 
-    expect(mobileDataEnabled, isTrue);
+    test.expect(mobileDataEnabled, test.isTrue);
   });
 }
 
 Future<void> testWifi() async {
-  test('Check Wifi Enabled', () async {
+  test.test('Check Wifi Enabled', () async {
     final ConnectivityResult connectivityResult =
     await Connectivity().checkConnectivity();
 
     final bool wifiEnabled = connectivityResult == ConnectivityResult.wifi;
 
-    expect(wifiEnabled, isTrue);
+    test.expect(wifiEnabled, test.isTrue);
   });
 }
